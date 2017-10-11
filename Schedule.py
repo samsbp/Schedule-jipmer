@@ -18,8 +18,35 @@ class Doctor:
         self.neuro = doc_dict['NEUROLOGY']
         self.cardio = doc_dict['CARDIO']
         self.not_avail_micu = False
+        self.hidden=False
     def __str__(self):
         return (self.name+str(self.current_unit))
+def get_ems(i,j,emplist): #note that ems_i and ems_j should be global or should be passed by reference
+    found = False
+    for k in range(len(unit[i])):
+        if unit[i][k].ems==0 and unit[i][k].sem==2:
+            emplist.append(unit[i][k])
+            unit[i][k].ems=1
+            unit[i][k].hidden=True
+            found=True
+            break
+    if found:
+        for k in range(len(unit[j])):
+            if unit[j][k].ems == 0 and unit[j][k].sem==2:
+                emplist.append(unit[j][k])
+                unit[j][k].ems =1
+                unit[j][k].hidden =True
+                return (i,j)
+                break                      #end stage for recursion
+    if not found:  # for 1 shift
+        i = i + 1 % 6
+        j = j + 1 % 6
+        get_ems(i, j,emplist)
+
+# 1shift = when you dont find a doctor availale
+# 2shift = next month iteration
+
+
 
 
 #end of class definition
@@ -39,7 +66,17 @@ if __name__ == '__main__':
     for j in range(len(unit)):
         print(j)
         for i in unit[j]:
-            print(i)
+            if not i.hidden:
+                print(i)
+    list1=[]
+    get_ems(0,1,list1)
+    print("ems ppl")
+    for k in list1:
+        print(k)
+
+#def schedule():
+
+
 
 
 
